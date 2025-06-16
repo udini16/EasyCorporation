@@ -24,5 +24,4 @@ public class MainActivity extends AppCompatActivity {
     //lalala
     //lalalalalalalal
     //ihatereggin
-
 }
