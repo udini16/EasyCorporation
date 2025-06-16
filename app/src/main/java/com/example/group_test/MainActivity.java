@@ -21,4 +21,7 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
     } //raed danish
+    //lalala
+    //lalalalalalalal
+    //ihatereggin
 }
