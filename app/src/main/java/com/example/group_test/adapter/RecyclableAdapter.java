@@ -1,4 +1,4 @@
-package com.example.group_test.adapter;
+/**package com.example.group_test.adapter;
 
 import android.view.View;
 import android.widget.TextView;
@@ -17,3 +17,4 @@ public class RecyclableAdapter extends RecyclerView.Adapter<RecyclableAdapter.Vi
         }
     }
 }
+ */
