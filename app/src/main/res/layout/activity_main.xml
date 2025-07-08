@@ -13,23 +13,32 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="172dp"
         android:text="Hello World!"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- NEW BUTTON -->
+    <Button
+        android:id="@+id/btnRequestForm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Request a Form"
+        app:layout_constraintTop_toBottomOf="@id/tvHello"
+        app:layout_constraintBottom_toTopOf="@id/btnLogout"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:onClick="requestFormClicked"
+        app:layout_constraintVertical_bias="0.5" />
 
     <Button
         android:id="@+id/btnLogout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="264dp"
-        android:onClick="logoutClicked"
         android:text="LOGOUT"
+        android:onClick="logoutClicked"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.517"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintVertical_bias="1.0" />
-
-
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginBottom="264dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

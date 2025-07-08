@@ -76,4 +76,10 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    public void requestFormClicked(View view) {
+        Intent intent = new Intent(MainActivity.this, FormRequest.class);
+        startActivity(intent);
+    }
+
+
 }

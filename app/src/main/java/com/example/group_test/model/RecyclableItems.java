@@ -5,9 +5,10 @@ public class RecyclableItems {
     private String item_name;
     private Float price_per_kg;
 
-    public RecyclableItems(){
+    public RecyclableItems() {
     }
-    public RecyclableItems(int item_id, String item_name, Float price_per_kg){
+
+    public RecyclableItems(int item_id, String item_name, Float price_per_kg) {
         this.item_id = item_id;
         this.item_name = item_name;
         this.price_per_kg = price_per_kg;
@@ -16,6 +17,7 @@ public class RecyclableItems {
     public int getItem_id() {
         return item_id;
     }
+
     public void setItem_id(int item_id) {
         this.item_id = item_id;
     }
@@ -38,10 +40,6 @@ public class RecyclableItems {
 
     @Override
     public String toString() {
-        return "RecyclableItems{" +
-                "item_id=" + item_id +
-                ", item_name='" + item_name + '\'' +
-                ", price_per_kg=" + price_per_kg +
-                '}';
+        return item_name + " - RM " + String.format("%.2f", price_per_kg);
     }
 }
