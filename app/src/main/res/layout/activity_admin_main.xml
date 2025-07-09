@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/adminMainLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="24dp"
+    android:background="@android:color/white">
+
+    <TextView
+        android:id="@+id/tvHello"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="Hello World!" />
+
+    <Button
+        android:id="@+id/btnViewAllRequests"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="View All Requests"
+        android:onClick="AllRequestClicked"
+        android:layout_marginBottom="16dp" />
+
+    <Button
+        android:id="@+id/btnViewRecyclableItems"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="View Recyclable Items"
+        android:onClick="viewItemsClicked"
+        android:layout_marginBottom="16dp" />
+
+    <Button
+        android:id="@+id/btnLogout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="LOGOUT"
+        android:onClick="logoutClicked"
+        android:layout_marginBottom="24dp" />
+
+</LinearLayout>

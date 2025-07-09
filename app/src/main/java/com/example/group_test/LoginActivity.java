@@ -81,10 +81,14 @@ public class LoginActivity extends AppCompatActivity {
                         spm.storeUser(user);
 
                         //forward to MainActivity
-                        Intent intent = new Intent(getApplicationContext(), com.example.group_test.MainActivity.class);
+                        Intent intent;
+                        if ("admin".equalsIgnoreCase(user.getRole())) {
+                            intent = new Intent(getApplicationContext(), AdminMainActivity.class);
+                        } else {
+                            intent = new Intent(getApplicationContext(), MainActivity.class);
+                        }
                         startActivity(intent);
                         finish();
-                        ;
                     } else {
                         // server return success but no user info replied
                         displayToast("Login error");
