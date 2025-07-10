@@ -1,6 +1,8 @@
 package com.example.group_test;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -10,8 +12,10 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.group_test.model.RecyclableItems;
+import com.example.group_test.model.User;
 import com.example.group_test.remote.ApiUtils;
 import com.example.group_test.remote.RequestService;
+import com.example.group_test.sharedpref.SharedPrefManager;
 
 import java.util.List;
 
@@ -21,19 +25,21 @@ import retrofit2.Response;
 
 public class FormRequest extends AppCompatActivity {
 
-    Spinner spinnerItems;
-    EditText editAddress, editNotes;
-    Button btnSubmit;
+    private Spinner spinnerItems;
+    private EditText editAddress, editNotes;
+    private Button btnSubmit;
 
-    List<RecyclableItems> itemList;
-    RequestService requestService;
+    private List<RecyclableItems> itemList;
+    private RequestService requestService;
+
+    private static final String TAG = "FormRequest";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_form_request);
 
-        // Bind UI
+        // Bind UI elements
         spinnerItems = findViewById(R.id.spinnerItems);
         editAddress = findViewById(R.id.editAddress);
         editNotes = findViewById(R.id.editNotes);
@@ -42,67 +48,92 @@ public class FormRequest extends AppCompatActivity {
         // Initialize API
         requestService = ApiUtils.getRequestService();
 
-        // Load items from API
+        // Load spinner data
         loadItemTypes();
 
-        // Submit button logic
-        btnSubmit.setOnClickListener(v -> {
-            if (itemList == null || itemList.isEmpty()) {
-                Toast.makeText(this, "No items available!", Toast.LENGTH_SHORT).show();
-                return;
-            }
-
-            RecyclableItems selectedItem = itemList.get(spinnerItems.getSelectedItemPosition());
-            String address = editAddress.getText().toString().trim();
-            String notes = editNotes.getText().toString().trim();
-
-            if (address.isEmpty()) {
-                Toast.makeText(this, "Address is required!", Toast.LENGTH_SHORT).show();
-                return;
-            }
-
-            // Submit request
-            requestService.submitRequest(selectedItem.getItem_id(), address, notes)
-                    .enqueue(new Callback<Void>() {
-                        @Override
-                        public void onResponse(Call<Void> call, Response<Void> response) {
-                            if (response.isSuccessful()) {
-                                Toast.makeText(FormRequest.this, "Request submitted successfully!", Toast.LENGTH_SHORT).show();
-                                finish();
-                            } else {
-                                Toast.makeText(FormRequest.this, "Submission failed!", Toast.LENGTH_SHORT).show();
-                            }
-                        }
-
-                        @Override
-                        public void onFailure(Call<Void> call, Throwable t) {
-                            Toast.makeText(FormRequest.this, "Error: " + t.getMessage(), Toast.LENGTH_LONG).show();
-                        }
-                    });
-        });
+        // Handle Submit
+        btnSubmit.setOnClickListener(v -> handleSubmit());
     }
 
     private void loadItemTypes() {
-        requestService.getItemTypes().enqueue(new Callback<List<RecyclableItems>>() {
+        SharedPrefManager spm = new SharedPrefManager(getApplicationContext());
+        User user = spm.getUser();
+        String token = user.getToken();
+
+        requestService.getItemTypes(token).enqueue(new Callback<List<RecyclableItems>>() {
             @Override
             public void onResponse(Call<List<RecyclableItems>> call, Response<List<RecyclableItems>> response) {
+                Log.d(TAG, "ItemTypes Response Code: " + response.code());
+
                 if (response.isSuccessful() && response.body() != null) {
                     itemList = response.body();
 
-                    ArrayAdapter<RecyclableItems> adapter = new ArrayAdapter<>(FormRequest.this,
+                    ArrayAdapter<RecyclableItems> adapter = new ArrayAdapter<>(
+                            FormRequest.this,
                             android.R.layout.simple_spinner_item,
-                            itemList);
+                            itemList
+                    );
                     adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                     spinnerItems.setAdapter(adapter);
+
+                    Toast.makeText(FormRequest.this, "Items loaded successfully.", Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(FormRequest.this, "Failed to load items.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(FormRequest.this, "Failed to load items. Code: " + response.code(), Toast.LENGTH_LONG).show();
                 }
             }
 
             @Override
             public void onFailure(Call<List<RecyclableItems>> call, Throwable t) {
-                Toast.makeText(FormRequest.this, "Error loading items: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                Log.e(TAG, "ItemTypes Load Failed: " + t.getMessage());
+                Toast.makeText(FormRequest.this, "Network error loading items.", Toast.LENGTH_LONG).show();
             }
         });
+    }
+
+    private void handleSubmit() {
+        if (itemList == null || itemList.isEmpty()) {
+            Toast.makeText(this, "Item list is empty!", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        RecyclableItems selectedItem = itemList.get(spinnerItems.getSelectedItemPosition());
+        String address = editAddress.getText().toString().trim();
+        String notes = editNotes.getText().toString().trim();
+
+        if (address.isEmpty()) {
+            Toast.makeText(this, "Please enter an address!", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        SharedPrefManager spm = new SharedPrefManager(getApplicationContext());
+        User user = spm.getUser();
+        String token = user.getToken();
+        int userId = user.getId();
+
+        Log.d(TAG, "Submitting Request -> userID: " + userId + ", itemID: " + selectedItem.getItem_id());
+
+        requestService.submitRequest(token, userId, selectedItem.getItem_id(), address, notes)
+                .enqueue(new Callback<Void>() {
+                    @Override
+                    public void onResponse(Call<Void> call, Response<Void> response) {
+                        Log.d(TAG, "Submit response code: " + response.code());
+                        if (response.isSuccessful()) {
+                            Toast.makeText(FormRequest.this, "Request submitted!", Toast.LENGTH_SHORT).show();
+
+                            // Go to ViewSubmittedRequest
+                            Intent intent = new Intent(FormRequest.this, ViewSubmittedRequest.class);
+                            startActivity(intent);
+                            finish();
+                        } else {
+                            Toast.makeText(FormRequest.this, "Submit failed! Code: " + response.code(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<Void> call, Throwable t) {
+                        Log.e(TAG, "Submit error: " + t.getMessage());
+                        Toast.makeText(FormRequest.this, "Submit error: " + t.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                });
     }
 }

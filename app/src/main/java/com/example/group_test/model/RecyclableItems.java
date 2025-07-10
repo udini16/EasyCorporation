@@ -42,4 +42,5 @@ public class RecyclableItems {
     public String toString() {
         return item_name + " - RM " + String.format("%.2f", price_per_kg);
     }
+
 }
