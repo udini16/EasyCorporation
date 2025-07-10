@@ -14,9 +14,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Group_test"
         tools:targetApi="31">
-
+        <activity
+            android:name=".UpdateRecyclableActivity"
+            android:exported="false" />
+        <activity
+            android:name=".RecyclableDetailsActivity"
+            android:exported="false" />
         <activity android:name=".ViewSubmittedRequest" />
-
         <activity
             android:name=".NewRecyclableActivity"
             android:exported="false" />

@@ -3,6 +3,9 @@ package com.example.group_test;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.ContextMenu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
@@ -125,6 +128,49 @@ public class RecyclableListActivity extends AppCompatActivity {
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
 
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.recyclable_context_menu, menu);
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        RecyclableItems selectedItem = adapter.getSelectedItem();
+        Log.d("MyApp", "selected "+selectedItem.toString());    // debug purpose
+
+        if (item.getItemId() == R.id.menu_details) {
+            // user clicked details contextual menu
+            doViewDetails(selectedItem);
+        }
+        /**else if (item.getItemId() == R.id.menu_delete) {
+            // user clicked the delete contextual menu
+            doDeleteItem(selectedItem);
+        } */
+        else if (item.getItemId() == R.id.menu_update) {
+            // user clicked the update contextual menu
+            doUpdateItem(selectedItem);
+        }
+
+        return super.onContextItemSelected(item);
+    }
+
+    private void doViewDetails(RecyclableItems selectedItem) {
+        Log.d("MyApp:", "viewing details: " + selectedItem.toString());
+        // forward user to BookDetailsActivity, passing the selected book id
+        Intent intent = new Intent(getApplicationContext(), RecyclableDetailsActivity.class);
+        intent.putExtra("item_id", selectedItem.getItem_id());
+        startActivity(intent);
+    }
+
+    private void doUpdateItem(RecyclableItems selectedBook) {
+        Log.d("MyApp:", "updating item: " + selectedBook.toString());
+        // forward user to UpdateBookActivity, passing the selected book id
+        Intent intent = new Intent(getApplicationContext(), UpdateRecyclableActivity.class);
+        intent.putExtra("item_id", selectedBook.getItem_id());
+        startActivity(intent);
     }
 
     public void floatingAddItemClicked(View view){

@@ -22,6 +22,7 @@
         android:id="@+id/rvRecycleList"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@+id/tvTitle"
         android:layout_marginTop="8dp" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
