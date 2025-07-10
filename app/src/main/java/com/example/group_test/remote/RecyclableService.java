@@ -16,4 +16,9 @@ public interface RecyclableService {
     @GET("recyclable_items/?order=item_name&orderType=asc")
     Call<List<RecyclableItems>> getAllRecyclables(@Header("api-key") String apiKey);
 
+    @FormUrlEncoded
+    @POST("recyclable_items")
+    Call<RecyclableItems> addRecyclable(@Header("api-key") String apiKey,
+                                         @Field("item_name") String item_name,
+                                         @Field("price_per_kg") Float price_per_kg);
 }

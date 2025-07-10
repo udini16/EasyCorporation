@@ -126,5 +126,10 @@ public class RecyclableListActivity extends AppCompatActivity {
         startActivity(intent);
 
     }
+
+    public void floatingAddItemClicked(View view){
+        Intent intent = new Intent(RecyclableListActivity.this, NewRecyclableActivity.class);
+        startActivity(intent);
+    }
 }
 
