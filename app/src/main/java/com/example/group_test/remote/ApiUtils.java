@@ -11,4 +11,7 @@ public class ApiUtils {
         return RetrofitClient.getClient(BASE_URL).create(RequestService.class);
     }
 
+    public static RecyclableService getRecyclableService() {
+        return RetrofitClient.getClient(BASE_URL).create(RecyclableService.class);
+    }
 }

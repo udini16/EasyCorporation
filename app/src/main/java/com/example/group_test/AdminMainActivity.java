@@ -59,7 +59,7 @@ public class AdminMainActivity extends AppCompatActivity {
         startActivity(intent);
     }
     public void viewItemsClicked(View view) {
-        Intent intent = new Intent(AdminMainActivity.this, FormRequest.class);
+        Intent intent = new Intent(AdminMainActivity.this, RecyclableListActivity.class);
         startActivity(intent);
     }
 }
