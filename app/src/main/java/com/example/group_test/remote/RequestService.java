@@ -37,5 +37,7 @@ public interface RequestService {
             @Field("notes") String notes
     );
 
-    Call<List<SubmittedRequest>> getSubmittedRequests(String token);
+    @GET("requests")
+    Call<List<SubmittedRequest>> getAllRequests(@Header("api-key") String apiKey);
+
 }

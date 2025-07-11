@@ -62,4 +62,9 @@ public class AdminMainActivity extends AppCompatActivity {
         Intent intent = new Intent(AdminMainActivity.this, RecyclableListActivity.class);
         startActivity(intent);
     }
+
+    public void AllRequestClicked(View view) {
+        Intent intent = new Intent(AdminMainActivity.this, RequestListActivity.class);
+        startActivity(intent);
+    }
 }
