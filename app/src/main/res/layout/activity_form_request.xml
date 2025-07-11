@@ -18,27 +18,47 @@
             android:id="@+id/spinnerItems"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"/>
+            android:layout_marginTop="10dp" />
 
         <EditText
             android:id="@+id/editAddress"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Enter your address"
-            android:layout_marginTop="20dp"/>
+            android:layout_marginTop="20dp" />
 
         <EditText
             android:id="@+id/editNotes"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Optional notes"
-            android:layout_marginTop="20dp"/>
+            android:layout_marginTop="20dp" />
 
+        <TextView
+            android:id="@+id/textWeight"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Enter weight (kg):"
+            android:layout_marginTop="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp" />
+
+        <EditText
+            android:id="@+id/editWeight"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="numberDecimal"
+            android:hint="e.g. 2.5"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp" />
+
+        <!-- Moved Button below weight input -->
         <Button
             android:id="@+id/btnSubmit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Submit Request"
-            android:layout_marginTop="30dp"/>
+            android:layout_marginTop="30dp" />
+
     </LinearLayout>
 </ScrollView>

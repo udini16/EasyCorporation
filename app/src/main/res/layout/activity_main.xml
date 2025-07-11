@@ -41,4 +41,16 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginBottom="264dp" />
 
+    <Button
+        android:id="@+id/btnViewRequests"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="View Submitted Requests"
+        android:onClick="viewRequestsClicked"
+        app:layout_constraintTop_toBottomOf="@id/btnRequestForm"
+        app:layout_constraintBottom_toTopOf="@id/btnLogout"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintVertical_bias="0.3" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

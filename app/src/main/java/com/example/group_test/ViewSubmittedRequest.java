@@ -43,11 +43,24 @@ public class ViewSubmittedRequest extends AppCompatActivity {
         loadSubmittedRequests();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        loadSubmittedRequests(); // Refresh when coming back to this activity
+    }
+
     private void loadSubmittedRequests() {
         SharedPrefManager spm = new SharedPrefManager(getApplicationContext());
         User user = spm.getUser();
+
+        if (user == null) {
+            Toast.makeText(this, "User not logged in", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
+
         String token = user.getToken();
-        int userId = user.getId(); // Ensure getId() method exists in your User class
+        int userId = user.getId();
 
         Log.d(TAG, "Loading requests with token: " + token);
         Log.d(TAG, "User ID: " + userId);
@@ -63,7 +76,6 @@ public class ViewSubmittedRequest extends AppCompatActivity {
 
                     adapter = new SubmittedRequestAdapter(ViewSubmittedRequest.this, requests);
                     recyclerView.setAdapter(adapter);
-
                 } else {
                     Log.e(TAG, "Error loading: " + response.message());
                     Toast.makeText(ViewSubmittedRequest.this, "Failed to load requests. Code: " + response.code(), Toast.LENGTH_SHORT).show();

@@ -84,5 +84,11 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    public void viewRequestsClicked(View view) {
+        Intent intent = new Intent(MainActivity.this, ViewSubmittedRequest.class);
+        startActivity(intent);
+    }
+
+
 
 }

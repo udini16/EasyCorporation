@@ -1,12 +1,13 @@
 package com.example.group_test.model;
 
-public class RecyclableItems {
+import java.io.Serializable;
+
+public class RecyclableItems implements Serializable {
     private int item_id;
     private String item_name;
     private Float price_per_kg;
 
-    public RecyclableItems() {
-    }
+    public RecyclableItems() {}
 
     public RecyclableItems(int item_id, String item_name, Float price_per_kg) {
         this.item_id = item_id;
@@ -42,5 +43,4 @@ public class RecyclableItems {
     public String toString() {
         return item_name + " - RM " + String.format("%.2f", price_per_kg);
     }
-
 }

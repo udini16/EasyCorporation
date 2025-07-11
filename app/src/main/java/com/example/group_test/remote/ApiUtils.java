@@ -1,17 +1,31 @@
 package com.example.group_test.remote;
 
-public class ApiUtils {
-    public static final String BASE_URL = "https://codelah.my/2024977759/api/";
+import retrofit2.Retrofit;
 
+public class ApiUtils {
+
+    private static final String BASE_URL = "https://codelah.my/2024977759/api/";
+
+    // Reuse Retrofit instance (singleton)
+    private static Retrofit retrofit = null;
+
+    private static Retrofit getRetrofitClient() {
+        if (retrofit == null) {
+            retrofit = RetrofitClient.getClient(BASE_URL);
+        }
+        return retrofit;
+    }
+
+    // Provide singleton service instances
     public static UserService getUserService() {
-        return RetrofitClient.getClient(BASE_URL).create(UserService.class);
+        return getRetrofitClient().create(UserService.class);
     }
 
     public static RequestService getRequestService() {
-        return RetrofitClient.getClient(BASE_URL).create(RequestService.class);
+        return getRetrofitClient().create(RequestService.class);
     }
 
     public static RecyclableService getRecyclableService() {
-        return RetrofitClient.getClient(BASE_URL).create(RecyclableService.class);
+        return getRetrofitClient().create(RecyclableService.class);
     }
 }

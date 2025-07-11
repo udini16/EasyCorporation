@@ -1,27 +1,38 @@
 package com.example.group_test.model;
 
 import com.google.gson.annotations.SerializedName;
+import java.io.Serializable;
 
-public class SubmittedRequest {
+public class SubmittedRequest implements Serializable {
+
     @SerializedName("request_id")
     private int request_id;
+
     private String address;
     private String notes;
     private String status;
-    private RecyclableItems item; // Use the correct model here
+    private RecyclableItems item;
+
+    @SerializedName("weight")
+    private float weight;
+
+    @SerializedName("total_price")
+    private float total_price;
 
     // === Constructors ===
-    public SubmittedRequest() {
-    }
+    public SubmittedRequest() {}
 
-    public SubmittedRequest(int request_id, String address, String notes, String status, RecyclableItems item) {
-        this.request_id =request_id;
+    public SubmittedRequest(int request_id, String address, String notes, String status, RecyclableItems item, float weight, float total_price) {
+        this.request_id = request_id;
         this.address = address;
         this.notes = notes;
         this.status = status;
         this.item = item;
+        this.weight = weight;
+        this.total_price = total_price;
     }
 
+    // === Getters ===
     public int getId() {
         return request_id;
     }
@@ -42,6 +53,15 @@ public class SubmittedRequest {
         return item;
     }
 
+    public float getWeight() {
+        return weight;
+    }
+
+    public float getTotal_price() {
+        return total_price;
+    }
+
+    // === Setters ===
     public void setId(int id) {
         this.request_id = id;
     }
@@ -62,6 +82,14 @@ public class SubmittedRequest {
         this.item = item;
     }
 
+    public void setWeight(float weight) {
+        this.weight = weight;
+    }
+
+    public void setTotal_price(float total_price) {
+        this.total_price = total_price;
+    }
+
     @Override
     public String toString() {
         return "SubmittedRequest{" +
@@ -70,6 +98,8 @@ public class SubmittedRequest {
                 ", notes='" + notes + '\'' +
                 ", status='" + status + '\'' +
                 ", item=" + item +
+                ", weight=" + weight +
+                ", total_price=" + total_price +
                 '}';
     }
 }
