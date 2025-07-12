@@ -69,6 +69,19 @@ public class UserUpdateRequestActivity extends AppCompatActivity {
         }
 
         btnUpdate.setOnClickListener(v -> handleUpdate());
+
+        Log.d("ACTIVITY_LAUNCH", "UserUpdateRequestActivity launched");
+
+        request = (SubmittedRequest) getIntent().getSerializableExtra("request");
+
+        if (request == null) {
+            Log.e("ACTIVITY_LAUNCH", "Request is null!");
+            Toast.makeText(this, "No request data found", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
+
+        Log.d("ACTIVITY_LAUNCH", "Received request: " + request.toString());
     }
 
     private void handleUpdate() {

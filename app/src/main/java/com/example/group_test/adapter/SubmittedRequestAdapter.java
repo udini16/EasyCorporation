@@ -63,19 +63,20 @@ public class SubmittedRequestAdapter extends RecyclerView.Adapter<SubmittedReque
         // Highlight and allow clicking to update status if it's pending
         if ("Pending".equalsIgnoreCase(request.getStatus())) {
             holder.status.setTextColor(ContextCompat.getColor(context, android.R.color.holo_red_dark));
-            holder.status.setOnClickListener(v -> updateStatusToCancelled(request, holder.getAdapterPosition()));
         } else {
             holder.status.setTextColor(ContextCompat.getColor(context, android.R.color.darker_gray));
-            holder.status.setOnClickListener(null);
         }
+        holder.status.setOnClickListener(null);
 
-        // Allow user to update request by long-pressing
+
         holder.itemView.setOnLongClickListener(v -> {
+            Log.d("LONG_CLICK", "Clicked on: " + request.toString());
             Intent intent = new Intent(context, UserUpdateRequestActivity.class);
             intent.putExtra("request", request); // Make sure SubmittedRequest implements Serializable
             context.startActivity(intent);
             return true;
         });
+
     }
 
     private void updateStatusToCancelled(SubmittedRequest request, int position) {

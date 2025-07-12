@@ -1,6 +1,8 @@
 package com.example.group_test.model;
 
-public class User {
+import java.io.Serializable;
+
+public class User implements Serializable {
 
     // represent a record in users tables
     private int id;
