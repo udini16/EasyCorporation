@@ -17,6 +17,9 @@
         <activity android:name=".UserUpdateRequestActivity" />
 
         <activity
+            android:name=".UpdateRequestActivity"
+            android:exported="false" />
+        <activity
             android:name=".RequestListActivity"
             android:exported="false" />
         <activity

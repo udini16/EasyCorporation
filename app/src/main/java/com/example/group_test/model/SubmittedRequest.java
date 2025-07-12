@@ -13,6 +13,8 @@ public class SubmittedRequest implements Serializable {
     private String status;
     private RecyclableItems item;
 
+    private User user;
+
     @SerializedName("weight")
     private float weight;
 
@@ -61,6 +63,10 @@ public class SubmittedRequest implements Serializable {
         return total_price;
     }
 
+    public User getUser() {
+        return user;
+    }
+
     // === Setters ===
     public void setId(int id) {
         this.request_id = id;
@@ -90,6 +96,10 @@ public class SubmittedRequest implements Serializable {
         this.total_price = total_price;
     }
 
+    public void setUser(User user) {
+        this.user = user;
+    }
+
     @Override
     public String toString() {
         return "SubmittedRequest{" +
@@ -98,6 +108,7 @@ public class SubmittedRequest implements Serializable {
                 ", notes='" + notes + '\'' +
                 ", status='" + status + '\'' +
                 ", item=" + item +
+                ", user=" + user +
                 ", weight=" + weight +
                 ", total_price=" + total_price +
                 '}';

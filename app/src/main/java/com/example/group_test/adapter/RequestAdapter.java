@@ -15,14 +15,52 @@ import java.util.List;
 
 public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.ViewHolder> {
 
-    class ViewHolder extends RecyclerView.ViewHolder implements View.OnLongClickListener {
-        public TextView tvRequestId, tvStatus, tvAddress;
+    private final List<SubmittedRequest> requestList;
+    private final Context context;
+    private int currentPos = -1;
 
-        public ViewHolder(View itemView) {
+    public RequestAdapter(Context context, List<SubmittedRequest> requestList) {
+        this.context = context;
+        this.requestList = requestList;
+    }
+
+    @Override
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(context).inflate(R.layout.request_list_item, parent, false);
+        return new ViewHolder(view);
+    }
+
+    @Override
+    public void onBindViewHolder(ViewHolder holder, int position) {
+        SubmittedRequest request = requestList.get(position);
+
+        holder.tvUsername.setText("User: " + (request.getUser() != null ? request.getUser().getUsername() : "Unknown"));
+        holder.tvItemName.setText("Item: " + (request.getItem() != null ? request.getItem().getItem_name() : "Unknown"));
+        holder.tvAddress.setText("Address: " + request.getAddress());
+        holder.tvStatus.setText("Status: " + request.getStatus());
+    }
+
+    @Override
+    public int getItemCount() {
+        return requestList.size();
+    }
+
+    public SubmittedRequest getSelectedItem() {
+        if (currentPos >= 0 && currentPos < requestList.size()) {
+            return requestList.get(currentPos);
+        }
+        return null;
+    }
+
+    class ViewHolder extends RecyclerView.ViewHolder implements View.OnLongClickListener {
+        TextView tvUsername, tvItemName, tvAddress, tvStatus;
+
+        ViewHolder(View itemView) {
             super(itemView);
-            tvRequestId = itemView.findViewById(R.id.tvRequestId);
-            tvStatus = itemView.findViewById(R.id.tvStatus);
+            tvUsername = itemView.findViewById(R.id.tvUsername);
+            tvItemName = itemView.findViewById(R.id.tvItemName);
             tvAddress = itemView.findViewById(R.id.tvAddress);
+            tvStatus = itemView.findViewById(R.id.tvStatus);
 
             itemView.setOnLongClickListener(this);
         }
@@ -32,44 +70,5 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.ViewHold
             currentPos = getAdapterPosition();
             return false;
         }
-    }
-
-    private List<SubmittedRequest> requestList;
-    private Context mContext;
-    private int currentPos;
-
-    public RequestAdapter(Context context, List<SubmittedRequest> listData) {
-        requestList = listData;
-        mContext = context;
-    }
-
-    private Context getmContext() { return mContext; }
-
-    @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        Context context = parent.getContext();
-        LayoutInflater inflater = LayoutInflater.from(context);
-        View view = inflater.inflate(R.layout.request_list_item, parent, false);
-        return new ViewHolder(view);
-    }
-
-    @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
-        SubmittedRequest request = requestList.get(position);
-        holder.tvRequestId.setText("Request ID: " + request.getId());
-        holder.tvStatus.setText("Status: " + request.getStatus());
-        holder.tvAddress.setText("Address: " + request.getAddress());
-    }
-
-    @Override
-    public int getItemCount() {
-        return requestList.size();
-    }
-
-    public SubmittedRequest getSelectedItem() {
-        if (currentPos >= 0 && requestList != null && currentPos < requestList.size()) {
-            return requestList.get(currentPos);
-        }
-        return null;
     }
 }

@@ -58,4 +58,15 @@ public interface RequestService {
             @Field("total_price") float totalPrice
     );
 
+    @FormUrlEncoded
+    @POST("requests/{id}")
+    Call<Void> updateRequestStatus(
+            @Header("api-key") String apiKey, // instead of Authorization
+            @Path("id") int requestId,
+            @Field("status") String status
+    );
+
+
+    @GET("requests/{id}")
+    Call<SubmittedRequest> getRequest(@Header("api-key") String apiKey, @Path("id") int id);
 }

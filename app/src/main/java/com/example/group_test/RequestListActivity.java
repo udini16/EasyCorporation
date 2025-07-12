@@ -31,7 +31,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class RequestListActivity extends AppCompatActivity {
+public class RequestListActivity extends AppCompatActivity{
 
     private RecyclerView rvRequestList;
     private RequestAdapter requestAdapter;
@@ -128,7 +128,8 @@ public class RequestListActivity extends AppCompatActivity {
     private void doUpdateRequest(SubmittedRequest selectedRequest) {
         Toast.makeText(this, "Update status for request id: " +selectedRequest.getId(), Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(getApplicationContext(), UpdateRequestActivity.class);
-        intent.putExtra("item_id", selectedRequest.getId());
+        intent.putExtra("request_id", selectedRequest.getId());
         startActivity(intent);
     }
+
 }
