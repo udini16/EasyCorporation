@@ -1,87 +1,124 @@
 <?xml version="1.0" encoding="utf-8"?>
-<GridLayout
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:useDefaultMargins="true"
-    android:alignmentMode="alignBounds"
-    android:columnOrderPreserved="false"
-    android:columnCount="2"
-    android:layout_marginTop="40dp">
+    android:background="@drawable/adminback3"
+    android:padding="16dp">
 
-    <!-- Title -->
-    <TextView
-        android:layout_columnSpan="2"
-        android:layout_gravity="center_horizontal"
-        android:text="Update Recyclable Item"
-        android:textSize="32sp" />
-
-    <TextView
-        android:layout_columnSpan="2"
-        android:layout_gravity="center"
-        android:text="Update item information"
-        android:textSize="16sp" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
+    <androidx.cardview.widget.CardView
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_margin="24dp"
+        app:cardCornerRadius="16dp"
+        app:cardElevation="8dp"
+        app:cardBackgroundColor="#FFFFFF"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
-        <!-- Item Name -->
-        <LinearLayout
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_height="match_parent"
+            android:padding="8dp">
 
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.25"
-                android:text="Item Name:" />
-
-            <EditText
-                android:id="@+id/txtItemName"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.75"
-                android:hint="Enter item name" />
-        </LinearLayout>
-
-        <!-- Price per KG -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.25"
-                android:text="Price per KG:" />
-
-            <EditText
-                android:id="@+id/txtPricePerKg"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.75"
-                android:inputType="numberDecimal"
-                android:hint="e.g. 5.00" />
-        </LinearLayout>
-
-        <!-- Update Button -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <Button
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Update Item"
-                android:onClick="updateRecyclableItem" />
+                android:padding="16dp">
 
-        </LinearLayout>
+                <!-- Title -->
+                <TextView
+                    android:id="@+id/tvTitle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="Update Recyclable Item"
+                    android:textColor="#000000"
+                    android:textSize="24sp"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent" />
 
-    </LinearLayout>
+                <!-- Item Name Label -->
+                <TextView
+                    android:id="@+id/labelItemName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
+                    android:text="Item Name"
+                    android:textColor="#2C2C2C"
+                    android:textSize="16sp"
+                    app:layout_constraintTop_toBottomOf="@id/tvTitle"
+                    app:layout_constraintStart_toStartOf="parent" />
 
-</GridLayout>
+                <!-- Item Name Input -->
+                <EditText
+                    android:id="@+id/txtItemName"
+                    android:layout_width="0dp"
+                    android:layout_height="60dp"
+                    android:layout_marginTop="8dp"
+                    android:background="#EEEEEE"
+                    android:hint="Enter item name"
+                    android:padding="16dp"
+                    android:textColor="#333333"
+                    android:textColorHint="#777777"
+                    android:textSize="16sp"
+                    app:layout_constraintTop_toBottomOf="@id/labelItemName"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent" />
+
+                <!-- Price Label -->
+                <TextView
+                    android:id="@+id/labelPrice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
+                    android:text="Price per KG"
+                    android:textColor="#2C2C2C"
+                    android:textSize="16sp"
+                    app:layout_constraintTop_toBottomOf="@id/txtItemName"
+                    app:layout_constraintStart_toStartOf="parent" />
+
+                <!-- Price Input -->
+                <EditText
+                    android:id="@+id/txtPricePerKg"
+                    android:layout_width="0dp"
+                    android:layout_height="60dp"
+                    android:layout_marginTop="8dp"
+                    android:background="#EEEEEE"
+                    android:hint="e.g. 5.00"
+                    android:inputType="numberDecimal"
+                    android:padding="16dp"
+                    android:textColor="#333333"
+                    android:textColorHint="#777777"
+                    android:textSize="16sp"
+                    app:layout_constraintTop_toBottomOf="@id/labelPrice"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent" />
+
+                <!-- Update Button -->
+                <Button
+                    android:id="@+id/btnUpdateItem"
+                    android:layout_width="0dp"
+                    android:layout_height="60dp"
+                    android:layout_marginTop="32dp"
+                    android:layout_marginBottom="24dp"
+                    android:background="#1F5C8A"
+                    android:text="Update Item"
+                    android:textColor="#FFFFFF"
+                    android:textSize="18sp"
+                    app:layout_constraintTop_toBottomOf="@id/txtPricePerKg"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </ScrollView>
+    </androidx.cardview.widget.CardView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

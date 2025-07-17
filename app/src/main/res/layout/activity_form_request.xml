@@ -1,64 +1,168 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="20dp">
+    android:background="@drawable/background2"
+    tools:context=".MainActivity">
 
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+    <!-- Card View Container -->
+    <androidx.cardview.widget.CardView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="16dp"
+        app:cardElevation="8dp"
+        app:cardBackgroundColor="#FFFFFF"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_margin="24dp">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Select Recyclable Item" />
-
-        <Spinner
-            android:id="@+id/spinnerItems"
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp" />
+            android:layout_height="match_parent"
+            android:padding="8dp">
 
-        <EditText
-            android:id="@+id/editAddress"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Enter your address"
-            android:layout_marginTop="20dp" />
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="16dp">
 
-        <EditText
-            android:id="@+id/editNotes"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Optional notes"
-            android:layout_marginTop="20dp" />
+                <!-- Title -->
+                <TextView
+                    android:id="@+id/tvTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:fontFamily="sans-serif-black"
+                    android:text="Select Recyclable Item"
+                    android:textColor="#2C2C2C"
+                    android:textSize="24sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/textWeight"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Enter weight (kg):"
-            android:layout_marginTop="16dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp" />
+                <!-- Gray Spinner -->
+                <Spinner
+                    android:id="@+id/spinnerItems"
+                    android:layout_width="0dp"
+                    android:layout_height="56dp"
+                    android:layout_marginTop="24dp"
+                    android:background="@android:drawable/btn_default"
+                    android:popupBackground="#EEEEEE"
+                    android:padding="12dp"
+                    android:spinnerMode="dropdown"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tvTitle" />
 
-        <EditText
-            android:id="@+id/editWeight"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="numberDecimal"
-            android:hint="e.g. 2.5"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp" />
+                <!-- Address Field -->
+                <TextView
+                    android:id="@+id/tvAddressLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
+                    android:text="Address"
+                    android:textColor="#2C2C2C"
+                    android:textSize="16sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/spinnerItems" />
 
-        <!-- Moved Button below weight input -->
-        <Button
-            android:id="@+id/btnSubmit"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Submit Request"
-            android:layout_marginTop="30dp" />
+                <!-- Gray Address EditText -->
+                <EditText
+                    android:id="@+id/editAddress"
+                    android:layout_width="0dp"
+                    android:layout_height="60dp"
+                    android:layout_marginTop="8dp"
+                    android:background="#EEEEEE"
+                    android:hint="Enter your full address"
+                    android:inputType="textPostalAddress"
+                    android:padding="16dp"
+                    android:textColor="#333333"
+                    android:textColorHint="#777777"
+                    android:drawablePadding="8dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tvAddressLabel" />
 
-    </LinearLayout>
-</ScrollView>
+                <!-- Notes Field -->
+                <TextView
+                    android:id="@+id/tvNotesLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
+                    android:text="Additional Notes"
+                    android:textColor="#2C2C2C"
+                    android:textSize="16sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/editAddress" />
+
+                <!-- Gray Notes EditText -->
+                <EditText
+                    android:id="@+id/editNotes"
+                    android:layout_width="0dp"
+                    android:layout_height="120dp"
+                    android:layout_marginTop="8dp"
+                    android:background="#EEEEEE"
+                    android:gravity="top"
+                    android:hint="Optional notes for collection"
+                    android:inputType="textMultiLine"
+                    android:padding="16dp"
+                    android:textColor="#333333"
+                    android:textColorHint="#777777"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tvNotesLabel" />
+
+                <!-- Weight Field -->
+                <TextView
+                    android:id="@+id/textWeight"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
+                    android:text="Weight (kg)"
+                    android:textColor="#2C2C2C"
+                    android:textSize="16sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/editNotes" />
+
+                <!-- Gray Weight EditText -->
+                <EditText
+                    android:id="@+id/editWeight"
+                    android:layout_width="0dp"
+                    android:layout_height="60dp"
+                    android:layout_marginTop="8dp"
+                    android:background="#EEEEEE"
+                    android:hint="e.g. 2.5"
+                    android:inputType="numberDecimal"
+                    android:padding="16dp"
+                    android:textColor="#333333"
+                    android:textColorHint="#777777"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/textWeight" />
+
+                <!-- Gray Submit Button -->
+                <Button
+                    android:id="@+id/btnSubmit"
+                    android:layout_width="0dp"
+                    android:layout_height="60dp"
+                    android:layout_marginTop="32dp"
+                    android:layout_marginBottom="24dp"
+                    android:background="#347433"
+                    android:fontFamily="sans-serif-medium"
+                    android:text="Submit Request"
+                    android:textColor="#FFFFFF"
+                    android:textSize="18sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/editWeight" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </ScrollView>
+    </androidx.cardview.widget.CardView>
+</androidx.constraintlayout.widget.ConstraintLayout>

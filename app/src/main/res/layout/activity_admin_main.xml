@@ -1,42 +1,104 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/adminMainLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:gravity="center"
-    android:padding="24dp"
-    android:background="@android:color/white">
+    android:background="@drawable/adminback2"
+    tools:context=".AdminMainActivity">
 
-    <TextView
-        android:id="@+id/tvHello"
-        android:layout_width="wrap_content"
+    <!-- Card View Container -->
+    <androidx.cardview.widget.CardView
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:text="Hello World!" />
+        app:cardCornerRadius="16dp"
+        app:cardElevation="8dp"
+        app:cardBackgroundColor="#FFFFFF"
+        android:layout_margin="24dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
-    <Button
-        android:id="@+id/btnViewAllRequests"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="View All Requests"
-        android:onClick="AllRequestClicked"
-        android:layout_marginBottom="16dp" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="24dp">
 
-    <Button
-        android:id="@+id/btnViewRecyclableItems"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="View Recyclable Items"
-        android:onClick="viewItemsClicked"
-        android:layout_marginBottom="16dp" />
+            <!-- Greeting Text -->
+            <TextView
+                android:id="@+id/tvHello"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Hello "
+                android:textSize="24sp"
+                android:textColor="#2C2C2C"
+                android:layout_marginTop="8dp"
+                android:fontFamily="sans-serif-medium"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
 
-    <Button
-        android:id="@+id/btnLogout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="LOGOUT"
-        android:onClick="logoutClicked"
-        android:layout_marginBottom="24dp" />
+            <!-- Image below Hello Text -->
+            <ImageView
+                android:id="@+id/userImage"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_marginTop="16dp"
+                android:src="@drawable/admin"
+            android:contentDescription="User Image"
+            app:layout_constraintTop_toBottomOf="@id/tvHello"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
-</LinearLayout>
+            <!-- View All Requests Button -->
+            <Button
+                android:id="@+id/btnViewAllRequests"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:background="#1F5C8A"
+                android:text="View All Requests"
+                android:textColor="#FFFFFF"
+                android:onClick="AllRequestClicked"
+                android:fontFamily="sans-serif-medium"
+                app:layout_constraintTop_toBottomOf="@id/userImage"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <!-- View Recyclable Items Button -->
+            <Button
+                android:id="@+id/btnViewRecyclableItems"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:background="#1F5C8A"
+                android:text="View Recyclable Items"
+                android:textColor="#FFFFFF"
+                android:onClick="viewItemsClicked"
+                android:fontFamily="sans-serif-medium"
+                app:layout_constraintTop_toBottomOf="@id/btnViewAllRequests"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <!-- Logout Button -->
+            <Button
+                android:id="@+id/btnLogout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="8dp"
+                android:background="#800020"
+                android:text="LOGOUT"
+                android:textColor="#FFFFFF"
+                android:onClick="logoutClicked"
+                android:fontFamily="sans-serif-medium"
+                app:layout_constraintTop_toBottomOf="@id/btnViewRecyclableItems"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
+</androidx.constraintlayout.widget.ConstraintLayout>
