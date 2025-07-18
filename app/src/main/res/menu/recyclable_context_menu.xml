@@ -11,8 +11,5 @@
         android:showAsAction="always"
         android:title="Update" />
 
-    <item android:id="@+id/menu_delete"
-        android:showAsAction="always"
-        android:title="Delete" />
 
 </menu>

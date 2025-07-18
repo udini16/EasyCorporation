@@ -145,10 +145,6 @@ public class RecyclableListActivity extends AppCompatActivity {
             // user clicked details contextual menu
             doViewDetails(selectedItem);
         }
-        /**else if (item.getItemId() == R.id.menu_delete) {
-            // user clicked the delete contextual menu
-            doDeleteItem(selectedItem);
-        } */
         else if (item.getItemId() == R.id.menu_update) {
             // user clicked the update contextual menu
             doUpdateItem(selectedItem);

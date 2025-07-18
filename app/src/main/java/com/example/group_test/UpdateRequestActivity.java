@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.View;
 import android.content.Intent;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -16,6 +17,7 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.example.group_test.model.SubmittedRequest;
 import com.example.group_test.model.User;
+import com.example.group_test.model.RecyclableItems;
 import com.example.group_test.remote.ApiUtils;
 import com.example.group_test.remote.RequestService;
 import com.example.group_test.sharedpref.SharedPrefManager;
@@ -28,12 +30,17 @@ public class UpdateRequestActivity extends AppCompatActivity {
 
     private RequestService requestService;
     private Button btnAccept, btnReject;
+    private EditText etWeight;
+    private TextView tvTotalPrice;
+
+    private float itemPricePerKg = 0f;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_update_request);
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
@@ -51,14 +58,17 @@ public class UpdateRequestActivity extends AppCompatActivity {
 
         btnAccept = findViewById(R.id.btnAccept);
         btnReject = findViewById(R.id.btnReject);
+        etWeight = findViewById(R.id.etWeight); // NEW weight input
+        tvTotalPrice = findViewById(R.id.tvTotalPrice); // Total price display
+
         btnAccept.setVisibility(View.GONE);
         btnReject.setVisibility(View.GONE);
+        etWeight.setVisibility(View.GONE);
+        tvTotalPrice.setVisibility(View.GONE);
 
         requestService.getRequest(token, requestId).enqueue(new Callback<SubmittedRequest>() {
             @Override
             public void onResponse(Call<SubmittedRequest> call, Response<SubmittedRequest> response) {
-                Log.d("MyApp:", "Response: " + response.raw().toString());
-
                 if (response.code() == 200) {
                     SubmittedRequest request = response.body();
 
@@ -66,60 +76,87 @@ public class UpdateRequestActivity extends AppCompatActivity {
                     TextView tvUsername = findViewById(R.id.tvUsername);
                     TextView tvItemName = findViewById(R.id.tvItemName);
                     TextView tvAddress = findViewById(R.id.tvAddress);
-                    TextView tvNotes = findViewById(R.id.tvNotes);
-                    TextView tvWeight = findViewById(R.id.tvWeight);
                     TextView tvStatus = findViewById(R.id.tvStatus);
-                    TextView tvTotalPrice = findViewById(R.id.tvTotalPrice);
+                    TextView tvNotes = findViewById(R.id.tvNotes);
 
                     tvRequestId.setText("Request ID: " + request.getId());
                     tvUsername.setText("Username: " + (request.getUser() != null ? request.getUser().getUsername() : "Unknown"));
-                    tvItemName.setText("Item Name: " + (request.getItem() != null ? request.getItem().getItem_name() : "Unknown"));
+
+                    RecyclableItems item = request.getItem();
+                    String itemName = (item != null) ? item.getItem_name() : "Unknown";
+                    itemPricePerKg = (item != null) ? item.getPrice_per_kg() : 0f;
+
+                    tvItemName.setText("Item Name: " + itemName);
                     tvAddress.setText("Address: " + request.getAddress());
                     tvStatus.setText("Status: " + request.getStatus());
                     tvNotes.setText("Notes: " + request.getNotes());
-                    tvWeight.setText("Weight: " + request.getWeight());
-                    tvTotalPrice.setText("Total Price: " + request.getTotal_price());
+
+                    // Always show weight and total price
+                    etWeight.setVisibility(View.VISIBLE);
+                    tvTotalPrice.setVisibility(View.VISIBLE);
+
+                    // Set initial values from server
+                    etWeight.setText(String.valueOf(request.getWeight()));
+                    tvTotalPrice.setText("Total Price: RM " + String.format("%.2f", request.getTotal_price()));
 
                     if ("Pending".equalsIgnoreCase(request.getStatus())) {
+                        // Make editable only for Pending
+                        etWeight.setEnabled(true);
                         btnAccept.setVisibility(View.VISIBLE);
                         btnReject.setVisibility(View.VISIBLE);
 
                         btnAccept.setOnClickListener(v -> {
-                            updateStatus(token, request.getId(), "Accepted");
+                            String weightStr = etWeight.getText().toString().trim();
+                            if (weightStr.isEmpty()) {
+                                Toast.makeText(UpdateRequestActivity.this, "Please enter weight", Toast.LENGTH_SHORT).show();
+                                return;
+                            }
+
+                            float weight = Float.parseFloat(weightStr);
+                            float totalPrice = itemPricePerKg * weight;
+
+                            // Show updated total price before submitting
+                            tvTotalPrice.setText("Total Price: RM " + String.format("%.2f", totalPrice));
+
+                            updateStatus(token, request.getId(), "Accepted", weight, totalPrice);
                         });
 
                         btnReject.setOnClickListener(v -> {
-                            updateStatus(token, request.getId(), "Rejected");
+                            updateStatus(token, request.getId(), "Rejected", 0f, 0f);
                         });
+
+                    } else {
+                        // Disable editing if not Pending
+                        etWeight.setEnabled(false);
+                        btnAccept.setVisibility(View.GONE);
+                        btnReject.setVisibility(View.GONE);
                     }
 
                 } else if (response.code() == 401) {
                     Toast.makeText(getApplicationContext(), "Invalid session. Please login again", Toast.LENGTH_LONG).show();
                     clearSessionAndRedirect();
-                }
-                else {
+                } else {
                     Toast.makeText(getApplicationContext(), "Error: " + response.message(), Toast.LENGTH_LONG).show();
-                    Log.e("MyApp: ", response.toString());
                 }
             }
+
 
             @Override
             public void onFailure(Call<SubmittedRequest> call, Throwable throwable) {
                 Toast.makeText(UpdateRequestActivity.this, "Error connecting", Toast.LENGTH_LONG).show();
             }
         });
-
     }
 
-    private void updateStatus(String token, int requestId, String newStatus) {
-        requestService.updateRequestStatus(token, requestId, newStatus).enqueue(new Callback<Void>() {
+    private void updateStatus(String token, int requestId, String newStatus, float weight, float totalPrice) {
+        requestService.updateRequestStatus(token, requestId, newStatus, weight, totalPrice).enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
-                if (response.code() == 200 || response.code() == 204) {
+                if (response.isSuccessful()) {
                     Toast.makeText(UpdateRequestActivity.this, "Status updated to " + newStatus, Toast.LENGTH_SHORT).show();
-                    finish(); // Close and return to previous screen
+                    finish();
                 } else {
-                    Toast.makeText(UpdateRequestActivity.this, "Failed to update status. Code: " + response.code(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(UpdateRequestActivity.this, "Failed to update: " + response.code(), Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -130,7 +167,7 @@ public class UpdateRequestActivity extends AppCompatActivity {
         });
     }
 
-    public void clearSessionAndRedirect(){
+    public void clearSessionAndRedirect() {
         SharedPrefManager spm = new SharedPrefManager(getApplicationContext());
         spm.logout();
         finish();
