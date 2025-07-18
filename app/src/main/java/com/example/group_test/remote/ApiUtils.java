@@ -4,7 +4,7 @@ import retrofit2.Retrofit;
 
 public class ApiUtils {
 
-    private static final String BASE_URL = "https://codelah.my/2024977759/api/";
+    private static final String BASE_URL = "https://codelah.my/db_reggin/api/";
 
     // Reuse Retrofit instance (singleton)
     private static Retrofit retrofit = null;
