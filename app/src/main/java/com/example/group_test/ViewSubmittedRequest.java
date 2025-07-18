@@ -46,7 +46,7 @@ public class ViewSubmittedRequest extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        loadSubmittedRequests(); // Refresh when coming back to this activity
+        loadSubmittedRequests(); // Refresh data when returning to this activity to reflect updates
     }
 
     private void loadSubmittedRequests() {
@@ -59,11 +59,16 @@ public class ViewSubmittedRequest extends AppCompatActivity {
             return;
         }
 
-        String token = user.getToken();
-        int userId = user.getId();
+        final String token = user.getToken();
+        final int userId = user.getId();
 
-        Log.d(TAG, "Loading requests with token: " + token);
-        Log.d(TAG, "User ID: " + userId);
+        if (token == null || token.isEmpty()) {
+            Toast.makeText(this, "Invalid user token", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
+
+        Log.d(TAG, "Loading requests for user ID: " + userId);
 
         requestService.getSubmittedRequests(token, userId).enqueue(new Callback<List<SubmittedRequest>>() {
             @Override
@@ -72,20 +77,32 @@ public class ViewSubmittedRequest extends AppCompatActivity {
 
                 if (response.isSuccessful() && response.body() != null) {
                     List<SubmittedRequest> requests = response.body();
-                    Log.d(TAG, "Number of requests: " + requests.size());
+                    Log.d(TAG, "Number of requests received: " + requests.size());
 
-                    adapter = new SubmittedRequestAdapter(ViewSubmittedRequest.this, requests);
-                    recyclerView.setAdapter(adapter);
+                    if (adapter == null) {
+                        adapter = new SubmittedRequestAdapter(ViewSubmittedRequest.this, requests);
+                        recyclerView.setAdapter(adapter);
+                    } else {
+                        // Update adapter data and refresh list
+                        adapter = new SubmittedRequestAdapter(ViewSubmittedRequest.this, requests);
+                        recyclerView.setAdapter(adapter);
+                        // Or if your adapter supports update method, use that instead for better performance
+                        // adapter.updateData(requests);
+                    }
                 } else {
-                    Log.e(TAG, "Error loading: " + response.message());
-                    Toast.makeText(ViewSubmittedRequest.this, "Failed to load requests. Code: " + response.code(), Toast.LENGTH_SHORT).show();
+                    Log.e(TAG, "Failed to load requests: " + response.message());
+                    Toast.makeText(ViewSubmittedRequest.this,
+                            "Failed to load requests. Server returned: " + response.code(),
+                            Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<List<SubmittedRequest>> call, Throwable t) {
-                Log.e(TAG, "Load failed: " + t.getMessage());
-                Toast.makeText(ViewSubmittedRequest.this, "Error: " + t.getMessage(), Toast.LENGTH_LONG).show();
+                Log.e(TAG, "Request failed: ", t);
+                Toast.makeText(ViewSubmittedRequest.this,
+                        "Failed to load requests: " + t.getLocalizedMessage(),
+                        Toast.LENGTH_LONG).show();
             }
         });
     }

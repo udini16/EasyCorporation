@@ -49,6 +49,7 @@ public class SubmittedRequestAdapter extends RecyclerView.Adapter<SubmittedReque
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         SubmittedRequest request = requestList.get(position);
 
+        // Safely get item name
         String itemName = (request.getItem() != null && request.getItem().getItem_name() != null)
                 ? request.getItem().getItem_name()
                 : "Unknown";
@@ -58,6 +59,14 @@ public class SubmittedRequestAdapter extends RecyclerView.Adapter<SubmittedReque
         holder.notes.setText("Notes: " + request.getNotes());
         holder.status.setText("Status: " + request.getStatus());
 
+        // Show total price only if status is Completed
+        if ("Completed".equalsIgnoreCase(request.getStatus())) {
+            holder.totalPrice.setVisibility(View.VISIBLE);
+            holder.totalPrice.setText(String.format("Total Price: RM %.2f", request.getTotal_price()));
+        } else {
+            holder.totalPrice.setVisibility(View.GONE);
+        }
+
         // Color highlight for status
         if ("Pending".equalsIgnoreCase(request.getStatus())) {
             holder.status.setTextColor(ContextCompat.getColor(context, android.R.color.holo_red_dark));
@@ -65,12 +74,12 @@ public class SubmittedRequestAdapter extends RecyclerView.Adapter<SubmittedReque
             holder.status.setTextColor(ContextCompat.getColor(context, android.R.color.darker_gray));
         }
 
-        // Only allow update if status is Pending or Cancelled
+        // Long click to allow updates only if status is Pending or Cancelled
         holder.itemView.setOnLongClickListener(v -> {
             String status = request.getStatus();
             if ("Pending".equalsIgnoreCase(status) || "Cancelled".equalsIgnoreCase(status)) {
                 Intent intent = new Intent(context, UserUpdateRequestActivity.class);
-                intent.putExtra("request", request); // Make sure SubmittedRequest implements Serializable
+                intent.putExtra("request", request); // SubmittedRequest must implement Serializable
                 context.startActivity(intent);
             } else {
                 Toast.makeText(context, "You cannot edit this request when status is " + status, Toast.LENGTH_SHORT).show();
@@ -79,14 +88,13 @@ public class SubmittedRequestAdapter extends RecyclerView.Adapter<SubmittedReque
         });
     }
 
-
     @Override
     public int getItemCount() {
         return requestList.size();
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView itemName, address, notes, status;
+        TextView itemName, address, notes, status, totalPrice;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -94,9 +102,11 @@ public class SubmittedRequestAdapter extends RecyclerView.Adapter<SubmittedReque
             address = itemView.findViewById(R.id.textViewAddress);
             notes = itemView.findViewById(R.id.textViewNotes);
             status = itemView.findViewById(R.id.textViewStatus);
+            totalPrice = itemView.findViewById(R.id.textViewTotalPrice); // TextView for total price
         }
     }
 
+    // Method to update status to Cancelled on server and update UI accordingly
     private void updateStatusToCancelled(SubmittedRequest request, int position) {
         SharedPrefManager spm = new SharedPrefManager(context);
         String apiKey = spm.getUser().getToken();
