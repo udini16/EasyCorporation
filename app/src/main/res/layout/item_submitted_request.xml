@@ -43,24 +43,6 @@
             android:textSize="25sp" />
 
         <TextView
-            android:id="@+id/textViewWeight"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="sans-serif-medium"
-            android:text="Weight"
-            android:textColor="@android:color/black"
-            android:textSize="25sp" />
-
-        <TextView
-            android:id="@+id/textViewTotalPrice"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="sans-serif-medium"
-            android:text="Total Price"
-            android:textColor="@android:color/black"
-            android:textSize="25sp" />
-
-        <TextView
             android:id="@+id/textViewStatus"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

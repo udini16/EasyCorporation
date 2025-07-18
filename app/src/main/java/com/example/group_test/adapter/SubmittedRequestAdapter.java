@@ -56,27 +56,45 @@ public class SubmittedRequestAdapter extends RecyclerView.Adapter<SubmittedReque
         holder.itemName.setText("Item: " + itemName);
         holder.address.setText("Address: " + request.getAddress());
         holder.notes.setText("Notes: " + request.getNotes());
-        holder.weight.setText(String.format("Weight: %.2f kg", request.getWeight()));
-        holder.totalPrice.setText(String.format("Total Price: RM %.2f", request.getTotal_price()));
         holder.status.setText("Status: " + request.getStatus());
 
-        // Highlight and allow clicking to update status if it's pending
+        // Color highlight for status
         if ("Pending".equalsIgnoreCase(request.getStatus())) {
             holder.status.setTextColor(ContextCompat.getColor(context, android.R.color.holo_red_dark));
         } else {
             holder.status.setTextColor(ContextCompat.getColor(context, android.R.color.darker_gray));
         }
-        holder.status.setOnClickListener(null);
 
-
+        // Only allow update if status is Pending or Cancelled
         holder.itemView.setOnLongClickListener(v -> {
-            Log.d("LONG_CLICK", "Clicked on: " + request.toString());
-            Intent intent = new Intent(context, UserUpdateRequestActivity.class);
-            intent.putExtra("request", request); // Make sure SubmittedRequest implements Serializable
-            context.startActivity(intent);
+            String status = request.getStatus();
+            if ("Pending".equalsIgnoreCase(status) || "Cancelled".equalsIgnoreCase(status)) {
+                Intent intent = new Intent(context, UserUpdateRequestActivity.class);
+                intent.putExtra("request", request); // Make sure SubmittedRequest implements Serializable
+                context.startActivity(intent);
+            } else {
+                Toast.makeText(context, "You cannot edit this request when status is " + status, Toast.LENGTH_SHORT).show();
+            }
             return true;
         });
+    }
 
+
+    @Override
+    public int getItemCount() {
+        return requestList.size();
+    }
+
+    public static class ViewHolder extends RecyclerView.ViewHolder {
+        TextView itemName, address, notes, status;
+
+        public ViewHolder(View itemView) {
+            super(itemView);
+            itemName = itemView.findViewById(R.id.textViewItemName);
+            address = itemView.findViewById(R.id.textViewAddress);
+            notes = itemView.findViewById(R.id.textViewNotes);
+            status = itemView.findViewById(R.id.textViewStatus);
+        }
     }
 
     private void updateStatusToCancelled(SubmittedRequest request, int position) {
@@ -88,20 +106,11 @@ public class SubmittedRequestAdapter extends RecyclerView.Adapter<SubmittedReque
             return;
         }
 
-        // Extract the other required fields from the request
         String address = request.getAddress();
         String notes = request.getNotes();
-        float weight = request.getWeight();
         String status = "Cancelled";
 
-        Log.d("CANCEL_UPDATE", "ID: " + request.getId());
-        Log.d("CANCEL_UPDATE", "Address: " + address);
-        Log.d("CANCEL_UPDATE", "Notes: " + notes);
-        Log.d("CANCEL_UPDATE", "Weight: " + weight);
-        Log.d("CANCEL_UPDATE", "Status: " + status);
-
-        float totalPrice = 0;
-        requestService.updateFullRequest(apiKey, request.getId(), address, notes, weight, status, totalPrice)
+        requestService.updateFullRequest(apiKey, request.getId(), address, notes, 0f, status, 0f)
                 .enqueue(new Callback<Void>() {
                     @Override
                     public void onResponse(Call<Void> call, Response<Void> response) {
@@ -123,25 +132,5 @@ public class SubmittedRequestAdapter extends RecyclerView.Adapter<SubmittedReque
                         Log.e("CANCEL_UPDATE", "Error: " + t.getMessage());
                     }
                 });
-    }
-
-
-    @Override
-    public int getItemCount() {
-        return requestList.size();
-    }
-
-    public static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView itemName, address, notes, weight, totalPrice, status;
-
-        public ViewHolder(View itemView) {
-            super(itemView);
-            itemName = itemView.findViewById(R.id.textViewItemName);
-            address = itemView.findViewById(R.id.textViewAddress);
-            notes = itemView.findViewById(R.id.textViewNotes);
-            weight = itemView.findViewById(R.id.textViewWeight);
-            totalPrice = itemView.findViewById(R.id.textViewTotalPrice);
-            status = itemView.findViewById(R.id.textViewStatus);
-        }
     }
 }

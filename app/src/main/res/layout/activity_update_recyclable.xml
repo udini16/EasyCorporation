@@ -109,6 +109,7 @@
                     android:layout_marginTop="32dp"
                     android:layout_marginBottom="24dp"
                     android:background="#1F5C8A"
+                    android:onClick="updateRecyclableItem"
                     android:text="Update Item"
                     android:textColor="#FFFFFF"
                     android:textSize="18sp"

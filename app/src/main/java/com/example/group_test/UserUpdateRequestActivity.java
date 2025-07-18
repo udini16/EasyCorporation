@@ -22,7 +22,7 @@ import retrofit2.Response;
 
 public class UserUpdateRequestActivity extends AppCompatActivity {
 
-    private EditText editAddress, editNotes, editWeight;
+    private EditText editAddress, editNotes;
     private Spinner spinnerStatus;
     private Button btnUpdate;
 
@@ -36,7 +36,6 @@ public class UserUpdateRequestActivity extends AppCompatActivity {
 
         editAddress = findViewById(R.id.editAddress);
         editNotes = findViewById(R.id.editNotes);
-        editWeight = findViewById(R.id.editWeight);
         spinnerStatus = findViewById(R.id.spinnerStatus);
         btnUpdate = findViewById(R.id.btnUpdate);
 
@@ -50,10 +49,11 @@ public class UserUpdateRequestActivity extends AppCompatActivity {
             return;
         }
 
+        // Set existing data
         editAddress.setText(request.getAddress());
         editNotes.setText(request.getNotes());
-        editWeight.setText(String.valueOf(request.getWeight()));
 
+        // Setup spinner with statuses allowed to choose from
         ArrayAdapter<String> statusAdapter = new ArrayAdapter<>(
                 this,
                 android.R.layout.simple_spinner_item,
@@ -62,55 +62,50 @@ public class UserUpdateRequestActivity extends AppCompatActivity {
         statusAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerStatus.setAdapter(statusAdapter);
 
+        // Set spinner selection based on current status
         if ("Cancelled".equalsIgnoreCase(request.getStatus())) {
             spinnerStatus.setSelection(1);
         } else {
             spinnerStatus.setSelection(0);
         }
 
-        btnUpdate.setOnClickListener(v -> handleUpdate());
+        // Check if user can edit: only if status Pending or Cancelled
+        boolean canEdit = "Pending".equalsIgnoreCase(request.getStatus()) || "Cancelled".equalsIgnoreCase(request.getStatus());
 
-        Log.d("ACTIVITY_LAUNCH", "UserUpdateRequestActivity launched");
+        // Enable or disable editing accordingly
+        editAddress.setEnabled(canEdit);
+        editNotes.setEnabled(canEdit);
+        spinnerStatus.setEnabled(canEdit);
+        btnUpdate.setEnabled(canEdit);
 
-        request = (SubmittedRequest) getIntent().getSerializableExtra("request");
-
-        if (request == null) {
-            Log.e("ACTIVITY_LAUNCH", "Request is null!");
-            Toast.makeText(this, "No request data found", Toast.LENGTH_SHORT).show();
-            finish();
-            return;
+        if (!canEdit) {
+            Toast.makeText(this, "You cannot edit this request when status is " + request.getStatus(), Toast.LENGTH_LONG).show();
         }
 
+        btnUpdate.setOnClickListener(v -> {
+            if (canEdit) {
+                handleUpdate();
+            } else {
+                Toast.makeText(this, "Editing is disabled for this request status.", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        Log.d("ACTIVITY_LAUNCH", "UserUpdateRequestActivity launched");
         Log.d("ACTIVITY_LAUNCH", "Received request: " + request.toString());
     }
 
     private void handleUpdate() {
         String newAddress = editAddress.getText().toString().trim();
         String newNotes = editNotes.getText().toString().trim();
-        String weightStr = editWeight.getText().toString().trim();
         String newStatus = spinnerStatus.getSelectedItem().toString();
 
-        if (newAddress.isEmpty() || weightStr.isEmpty()) {
+        if (newAddress.isEmpty()) {
             Toast.makeText(this, "Please fill in all required fields", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        float newWeight;
-        try {
-            newWeight = Float.parseFloat(weightStr);
-        } catch (NumberFormatException e) {
-            Toast.makeText(this, "Invalid weight format", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        float pricePerKg = 0f;
-        if (request.getItem() != null) {
-            pricePerKg = request.getItem().getPrice_per_kg();
-        }
-        float totalPrice = pricePerKg * newWeight;
-
-        Log.d("PRICE_DEBUG", "Price per kg: " + pricePerKg);
-        Log.d("PRICE_DEBUG", "Weight entered: " + newWeight);
-        Log.d("PRICE_DEBUG", "Total price calculated: " + totalPrice);
+        float totalPrice = request.getTotal_price(); // Keep old price
+        float weight = request.getWeight(); // Keep old weight
 
         SharedPrefManager spm = new SharedPrefManager(getApplicationContext());
         String apiKey = spm.getUser().getToken();
@@ -121,18 +116,10 @@ public class UserUpdateRequestActivity extends AppCompatActivity {
             return;
         }
 
-        Log.d("TOKEN_DEBUG", "Using API Key: " + apiKey);
-        Log.d("UPDATE_DEBUG", "Sending update with:");
-        Log.d("UPDATE_DEBUG", "ID: " + request.getId());
-        Log.d("UPDATE_DEBUG", "Address: " + newAddress);
-        Log.d("UPDATE_DEBUG", "Notes: " + newNotes);
-        Log.d("UPDATE_DEBUG", "Weight: " + newWeight);
-        Log.d("UPDATE_DEBUG", "Status: " + newStatus);
-        requestService.updateFullRequest(apiKey, request.getId(), newAddress, newNotes, newWeight, newStatus, totalPrice)
+        requestService.updateFullRequest(apiKey, request.getId(), newAddress, newNotes, weight, newStatus, totalPrice)
                 .enqueue(new Callback<Void>() {
                     @Override
                     public void onResponse(Call<Void> call, Response<Void> response) {
-                        Log.d("UserUpdate", "Response: " + response.raw());
                         if (response.code() == 200) {
                             Toast.makeText(getApplicationContext(), "Request updated successfully", Toast.LENGTH_LONG).show();
                             finish();
@@ -141,17 +128,16 @@ public class UserUpdateRequestActivity extends AppCompatActivity {
                             clearSessionAndRedirect();
                         } else {
                             Toast.makeText(getApplicationContext(), "Failed to update: " + response.code(), Toast.LENGTH_LONG).show();
-                            Log.e("UserUpdate", "Update failed: " + response.message());
                         }
                     }
 
                     @Override
                     public void onFailure(Call<Void> call, Throwable t) {
                         Toast.makeText(getApplicationContext(), "Network error: " + t.getMessage(), Toast.LENGTH_LONG).show();
-                        Log.e("UserUpdate", "onFailure: " + t.toString());
                     }
                 });
     }
+
     private void clearSessionAndRedirect() {
         SharedPrefManager spm = new SharedPrefManager(getApplicationContext());
         spm.logout();
@@ -159,5 +145,4 @@ public class UserUpdateRequestActivity extends AppCompatActivity {
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
     }
-
 }

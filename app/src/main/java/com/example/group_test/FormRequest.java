@@ -26,7 +26,7 @@ import retrofit2.Response;
 public class FormRequest extends AppCompatActivity {
 
     private Spinner spinnerItems;
-    private EditText editAddress, editNotes, editWeight;
+    private EditText editAddress, editNotes;
     private Button btnSubmit;
 
     private List<RecyclableItems> itemList;
@@ -43,7 +43,6 @@ public class FormRequest extends AppCompatActivity {
         spinnerItems = findViewById(R.id.spinnerItems);
         editAddress = findViewById(R.id.editAddress);
         editNotes = findViewById(R.id.editNotes);
-        editWeight = findViewById(R.id.editWeight);
         btnSubmit = findViewById(R.id.btnSubmit);
 
         // Initialize API
@@ -100,33 +99,11 @@ public class FormRequest extends AppCompatActivity {
         RecyclableItems selectedItem = itemList.get(spinnerItems.getSelectedItemPosition());
         String address = editAddress.getText().toString().trim();
         String notes = editNotes.getText().toString().trim();
-        String weightStr = editWeight.getText().toString().trim();
 
         if (address.isEmpty()) {
             Toast.makeText(this, "Please enter an address!", Toast.LENGTH_SHORT).show();
             return;
         }
-
-        if (weightStr.isEmpty()) {
-            Toast.makeText(this, "Please enter weight!", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        float weight;
-        try {
-            weight = Float.parseFloat(weightStr);
-            if (weight <= 0) {
-                Toast.makeText(this, "Weight must be more than 0", Toast.LENGTH_SHORT).show();
-                return;
-            }
-        } catch (NumberFormatException e) {
-            Toast.makeText(this, "Invalid weight format", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        float pricePerKg = selectedItem.getPrice_per_kg();
-        float totalPrice = weight * pricePerKg;
-        Log.d(TAG, "Total Price: RM" + totalPrice);
 
         SharedPrefManager spm = new SharedPrefManager(getApplicationContext());
         User user = spm.getUser();
@@ -135,22 +112,22 @@ public class FormRequest extends AppCompatActivity {
 
         Log.d(TAG, "Submitting Request -> userID: " + userId + ", itemID: " + selectedItem.getItem_id());
 
-        // ✅ Now sending weight and total price
+        // Submit request without weight and totalPrice
         requestService.submitRequest(
                 token,
                 userId,
                 selectedItem.getItem_id(),
                 address,
                 notes,
-                weight,
-                totalPrice
+                0,          // weight = 0 (or backend should ignore it)
+                0           // totalPrice = 0
         ).enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
                 Log.d(TAG, "Submit response code: " + response.code());
                 if (response.isSuccessful()) {
                     Toast.makeText(FormRequest.this,
-                            "Request submitted!\nTotal: RM" + String.format("%.2f", totalPrice),
+                            "Request submitted successfully!",
                             Toast.LENGTH_LONG).show();
 
                     Intent intent = new Intent(FormRequest.this, ViewSubmittedRequest.class);
