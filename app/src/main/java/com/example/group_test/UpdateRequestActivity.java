@@ -29,7 +29,7 @@ import retrofit2.Response;
 public class UpdateRequestActivity extends AppCompatActivity {
 
     private RequestService requestService;
-    private Button btnAccept, btnReject;
+    private Button btnCompleted;
     private EditText etWeight;
     private TextView tvTotalPrice;
 
@@ -56,13 +56,11 @@ public class UpdateRequestActivity extends AppCompatActivity {
 
         requestService = ApiUtils.getRequestService();
 
-        btnAccept = findViewById(R.id.btnAccept);
-        btnReject = findViewById(R.id.btnReject);
+        btnCompleted = findViewById(R.id.btnCompleted);
         etWeight = findViewById(R.id.etWeight); // NEW weight input
         tvTotalPrice = findViewById(R.id.tvTotalPrice); // Total price display
 
-        btnAccept.setVisibility(View.GONE);
-        btnReject.setVisibility(View.GONE);
+        btnCompleted.setVisibility(View.GONE);
         etWeight.setVisibility(View.GONE);
         tvTotalPrice.setVisibility(View.GONE);
 
@@ -100,12 +98,11 @@ public class UpdateRequestActivity extends AppCompatActivity {
                     tvTotalPrice.setText("Total Price: RM " + String.format("%.2f", request.getTotal_price()));
 
                     if ("Pending".equalsIgnoreCase(request.getStatus())) {
-                        // Make editable only for Pending
+                        // Editable and visible fields
                         etWeight.setEnabled(true);
-                        btnAccept.setVisibility(View.VISIBLE);
-                        btnReject.setVisibility(View.VISIBLE);
+                        btnCompleted.setVisibility(View.VISIBLE);
 
-                        btnAccept.setOnClickListener(v -> {
+                        btnCompleted.setOnClickListener(v -> {
                             String weightStr = etWeight.getText().toString().trim();
                             if (weightStr.isEmpty()) {
                                 Toast.makeText(UpdateRequestActivity.this, "Please enter weight", Toast.LENGTH_SHORT).show();
@@ -115,22 +112,18 @@ public class UpdateRequestActivity extends AppCompatActivity {
                             float weight = Float.parseFloat(weightStr);
                             float totalPrice = itemPricePerKg * weight;
 
-                            // Show updated total price before submitting
+                            // Update display
                             tvTotalPrice.setText("Total Price: RM " + String.format("%.2f", totalPrice));
 
-                            updateStatus(token, request.getId(), "Accepted", weight, totalPrice);
+                            // Mark as completed
+                            updateStatus(token, request.getId(), "Completed", weight, totalPrice);
                         });
-
-                        btnReject.setOnClickListener(v -> {
-                            updateStatus(token, request.getId(), "Rejected", 0f, 0f);
-                        });
-
                     } else {
-                        // Disable editing if not Pending
+                        // Not editable if not Pending
                         etWeight.setEnabled(false);
-                        btnAccept.setVisibility(View.GONE);
-                        btnReject.setVisibility(View.GONE);
+                        btnCompleted.setVisibility(View.GONE);
                     }
+
 
                 } else if (response.code() == 401) {
                     Toast.makeText(getApplicationContext(), "Invalid session. Please login again", Toast.LENGTH_LONG).show();

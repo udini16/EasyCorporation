@@ -127,27 +127,16 @@
                     android:layout_marginTop="24dp">
 
                     <Button
-                        android:id="@+id/btnAccept"
-                        android:visibility="gone"
-                        android:layout_width="0dp"
+                        android:id="@+id/btnCompleted"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
+                        android:layout_marginTop="24dp"
+                        android:visibility="gone"
                         android:background="#1F5C8A"
                         android:textColor="@color/white"
                         android:textSize="20sp"
-                        android:text="Accept" />
+                        android:text="Mark as Completed" />
 
-                    <Button
-                        android:id="@+id/btnReject"
-                        android:visibility="gone"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:layout_marginStart="16dp"
-                        android:background="#800020"
-                        android:textColor="@color/white"
-                        android:textSize="20sp"
-                        android:text="Reject" />
                 </LinearLayout>
 
             </LinearLayout>
