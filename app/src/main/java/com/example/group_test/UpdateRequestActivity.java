@@ -86,7 +86,17 @@ public class UpdateRequestActivity extends AppCompatActivity {
 
                     tvItemName.setText("Item Name: " + itemName);
                     tvAddress.setText("Address: " + request.getAddress());
-                    tvStatus.setText("Status: " + request.getStatus());
+                    String status = request.getStatus();
+                    tvStatus.setText("Status: " + status);
+
+                    if ("Pending".equalsIgnoreCase(status)) {
+                        tvStatus.setTextColor(getResources().getColor(android.R.color.holo_red_dark));
+                    } else if ("Completed".equalsIgnoreCase(status)) {
+                        tvStatus.setTextColor(getResources().getColor(android.R.color.holo_green_dark));
+                    } else {
+                        tvStatus.setTextColor(getResources().getColor(android.R.color.black)); // Default color
+                    }
+
                     tvNotes.setText("Notes: " + request.getNotes());
 
                     // Always show weight and total price

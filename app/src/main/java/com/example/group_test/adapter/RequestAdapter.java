@@ -37,7 +37,17 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.ViewHold
         holder.tvUsername.setText("User: " + (request.getUser() != null ? request.getUser().getUsername() : "Unknown"));
         holder.tvItemName.setText("Item: " + (request.getItem() != null ? request.getItem().getItem_name() : "Unknown"));
         holder.tvAddress.setText("Address: " + request.getAddress());
-        holder.tvStatus.setText("Status: " + request.getStatus());
+        String status = request.getStatus();
+        holder.tvStatus.setText("Status: " + status);
+
+        // 🔴 Change color based on status
+        if ("Pending".equalsIgnoreCase(status)) {
+            holder.tvStatus.setTextColor(context.getResources().getColor(android.R.color.holo_red_dark));
+        } else if ("Completed".equalsIgnoreCase(status)) {
+            holder.tvStatus.setTextColor(context.getResources().getColor(android.R.color.holo_green_dark));
+        } else {
+            holder.tvStatus.setTextColor(context.getResources().getColor(android.R.color.black));
+        }
     }
 
     @Override
