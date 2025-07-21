@@ -56,7 +56,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Request ID:"
-                    android:textSize="20sp"
+                    android:textColor="#2C2C2C"
+                    android:textSize="24sp"
                     android:textStyle="bold" />
 
                 <TextView
@@ -65,49 +66,71 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="sans-serif-medium"
                     android:text="Username:"
-                    android:textSize="16sp" />
+                    android:textColor="#2C2C2C"
+                    android:textSize="20sp" />
 
                 <TextView
                     android:id="@+id/tvItemName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="sans-serif-medium"
-                    android:textSize="16sp"
-                    android:text="Item Name:" />
+                    android:text="Item Name:"
+                    android:textColor="#2C2C2C"
+                    android:textSize="20sp" />
 
                 <TextView
                     android:id="@+id/tvAddress"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="sans-serif-medium"
-                    android:textSize="16sp"
-                    android:text="Address:" />
+                    android:text="Address:"
+                    android:textColor="#2C2C2C"
+                    android:textSize="20sp" />
 
                 <TextView
                     android:id="@+id/tvStatus"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="sans-serif-medium"
-                    android:textSize="16sp"
-                    android:text="Status:" />
+                    android:text="Status:"
+                    android:textSize="20sp" />
 
                 <TextView
                     android:id="@+id/tvNotes"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="sans-serif-medium"
-                    android:textSize="16sp"
-                    android:text="Notes:" />
+                    android:text="Notes:"
+                    android:textColor="#2C2C2C"
+                    android:textSize="20sp" />
 
+                <!-- Weight Label -->
+                <TextView
+                    android:id="@+id/labelWeight"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:fontFamily="sans-serif-medium"
+                    android:text="Enter Weight(kg):"
+                    android:textColor="#2C2C2C"
+                    android:textSize="20sp" />
+
+                <!-- Weight Input Box -->
                 <EditText
                     android:id="@+id/etWeight"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Enter Weight (kg)"
-                    android:inputType="numberDecimal"
+                    android:layout_height="60dp"
                     android:layout_marginTop="8dp"
                     android:layout_marginBottom="8dp"
+                    android:background="#EEEEEE"
+                    android:hint="e.g. 5.0"
+                    android:inputType="numberDecimal"
+                    android:padding="16dp"
+                    android:textColor="#333333"
+                    android:textColorHint="#777777"
+                    android:textSize="16sp"
                     android:visibility="gone" />
+
 
                 <TextView
                     android:id="@+id/tvTotalPrice"
